@@ -8,11 +8,19 @@
 import XCTest
 
 class RemoteFeedLoader {
+    let url: URL
     let client: HTTPClient
     
-    init(client: HTTPClient) {
+    init(url: URL, client: HTTPClient) {
+        self.url = url
         self.client = client
     }
+    
+    /* Do you think for the same instance the client of `RemoteFeedLoader` would request different URLs
+      Looking at `FeedLoader` method `load(completion:)` This means we could load it from URL, load it
+     from cache. URL is a detail of the implementation of the RemoteFeedLoader`. It should not be part of
+     the `load` interface
+     */
     
     func load() {
         /* Here we have two responsibilities. One to locate the shared instance
@@ -20,7 +28,12 @@ class RemoteFeedLoader {
          instance I am talking but it doesn't need to know. If we inject our client
          we have more control over code.
         */
-        client.get(from: URL(string: "http://a-url.com")!)
+        /*
+         We don't know what the URL it could be. We could have different enviornments such as
+         dev, stage, uat. `RemoteFeedLoader` does not need to provenace of this data. It could
+         given to it. So we can inject it.
+         */
+        client.get(from: url)
     }
 }
 
@@ -51,19 +64,21 @@ class HTTPClientSpy: HTTPClient {
 final class RemoteFeedLoaderTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
+        let url = URL(string: "https://a-url.com")!
         let client = HTTPClientSpy()
-        _ = RemoteFeedLoader(client: client)
+        _ = RemoteFeedLoader(url: url, client: client)
         
         XCTAssertNil(client.requestedURL)
     }
     
     func test_load_requestDataFromURL() {
+        let url = URL(string: "https://a-given-url.com")!
         let client = HTTPClientSpy()
-        let sut = RemoteFeedLoader(client: client)
+        let sut = RemoteFeedLoader(url: url, client: client)
         
         sut.load()
         
-        XCTAssertNotNil(client.requestedURL)
+        XCTAssertEqual(client.requestedURL, url)
     }
 
 }
