@@ -35,7 +35,10 @@ protocol HTTPClient {
     func get(from url: URL)
 }
 
-// Spy captures value. `HTTPClientSpy` is just an implementation of `HTTPClient` rather than a subtype of `HTTPClient`
+/*Spy captures value. `HTTPClientSpy` is just an implementation of `HTTPClient` rather than a subtype of `HTTPClient` Setup is also simpler in this case. We don't need to inject a shared instance and clients
+ do not need to locate and it can just whatever is given to it.
+ */
+
 class HTTPClientSpy: HTTPClient {
     var requestedURL: URL?
     
