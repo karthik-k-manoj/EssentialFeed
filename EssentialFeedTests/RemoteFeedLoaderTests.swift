@@ -8,13 +8,19 @@
 import XCTest
 
 class RemoteFeedLoader {
+    let client: HTTPCLient
+    
+    init(client: HTTPCLient) {
+        self.client = client
+    }
+    
     func load() {
         /* Here we have two responsibilities. One to locate the shared instance
          and another to invoke this method. Using shared instance which exact
          instance I am talking but it doesn't need to know. If we inject our client
          we have more control over code.
         */
-        HTTPCLient.shared.get(from: URL(string: "http://a-url.com")!)
+        client.get(from: URL(string: "http://a-url.com")!)
     }
 }
 
@@ -45,8 +51,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
         let client = HTTPClientSpy()
-        HTTPCLient.shared = client
-        _ = RemoteFeedLoader()
+        _ = RemoteFeedLoader(client: client)
         
         XCTAssertNil(client.requestedURL)
     }
@@ -54,7 +59,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
     func test_load_requestDataFromURL() {
         let client = HTTPClientSpy()
         HTTPCLient.shared = client
-        let sut = RemoteFeedLoader()
+        let sut = RemoteFeedLoader(client: client)
         
         sut.load()
         
