@@ -8,9 +8,9 @@
 import XCTest
 
 class RemoteFeedLoader {
-    let client: HTTPCLient
+    let client: HTTPClient
     
-    init(client: HTTPCLient) {
+    init(client: HTTPClient) {
         self.client = client
     }
     
@@ -29,8 +29,8 @@ class RemoteFeedLoader {
  enable our test logic. Nothing wrong with subclass but there is better approach
  such as composition. To use composition we inject this type into `RemoteFeedLoader`
 */
-class HTTPCLient {
-    static var shared = HTTPCLient()
+class HTTPClient {
+    static var shared = HTTPClient()
     
     var requestedURL: URL?
     
@@ -40,7 +40,7 @@ class HTTPCLient {
 }
 
 // Spy captures value.
-class HTTPClientSpy: HTTPCLient {
+class HTTPClientSpy: HTTPClient {
     // This is test logic
     override func get(from url: URL) {
         requestedURL = url
@@ -58,7 +58,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
     
     func test_load_requestDataFromURL() {
         let client = HTTPClientSpy()
-        HTTPCLient.shared = client
+        HTTPClient.shared = client
         let sut = RemoteFeedLoader(client: client)
         
         sut.load()
