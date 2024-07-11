@@ -30,8 +30,6 @@ class RemoteFeedLoader {
  such as composition. To use composition we inject this type into `RemoteFeedLoader`
 */
 class HTTPClient {
-    static var shared = HTTPClient()
-    
     var requestedURL: URL?
     
     func get(from url: URL) {
@@ -58,7 +56,6 @@ final class RemoteFeedLoaderTests: XCTestCase {
     
     func test_load_requestDataFromURL() {
         let client = HTTPClientSpy()
-        HTTPClient.shared = client
         let sut = RemoteFeedLoader(client: client)
         
         sut.load()
