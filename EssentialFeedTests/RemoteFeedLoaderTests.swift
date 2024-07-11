@@ -9,6 +9,10 @@ import XCTest
 
 class RemoteFeedLoader {
     func load() {
+        // Here we have two responsibilities. One to locate the shared instance
+        // and another to invoke this method. Using shared instance which exact
+        // instance I am talking but it doesn't need to know. If we inject our client
+        // we have more control over code.
         HTTPCLient.shared.get(from: URL(string: "http://a-url.com")!)
     }
 }
