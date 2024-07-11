@@ -23,6 +23,8 @@ import XCTest
     There are better way to deal with this problem. Example dependency injection. We confrom to OCP
     principle. By injecting the dependency we keep our code modular. If we locate or create our collaborator
     then we introduce tight coupling between the modules.
+    Responsibility of locating and injecting the collaborator will be moved to a composer module (e.g., Main),
+    so we can focus only on passing messages between the other components.
  
  4) `HTTPClient` does not need to be a class. It just a contract defining which external functionality the
     `RemoteFeedLoader` needs so protocpl is more suitable way to define it. The benefit of creating it as a protocol
