@@ -13,13 +13,21 @@ import XCTest
     and when we are ready to compose we can bring `FeedLoader`
  
  2) `HTTPClient` has no reason to be a singleton or a shared instance aprt from the convenience to locate the
-    instance directly. To justify a singleton we neeed to have good reason. We need only one instance of `HTTPClient` and there is no reason we need only one instance of it.
+    instance directly. To justify a singleton we neeed to have good reason. We need only one instance of `HTTPClient`
+ and there is no reason we need only one instance of it.
  
- 3) `RemoteFeedLoader` does not need to locate or instantiate the `HTTPClient` instance. Instead we can make our more modular by injecting the HTTPClient as a dependency. It creates a strong depedency i.e `RemoteFeedLoader` cannot be created without an instance of `HTTPClient`. However using a singleton directly
- does not enforce this. A client wouldn't even know if such a dependecy exists. This is considered an anti-pattern. There are better way to deal with this problem. Example dependency injection. We confrom to OCP
- principle. By injecting the dependency we keep our code modular. If we locate or create our collaborator then we introduce tight coupling between the modules.
+ 3) `RemoteFeedLoader` does not need to locate or instantiate the `HTTPClient` instance.
+    Instead we can make our more modular by injecting the HTTPClient as a dependency. It creates a strong depedency i.e `RemoteFeedLoader`
+    cannot be created without an instance of `HTTPClient`. However using a singleton directly
+    does not enforce this. A client wouldn't even know if such a dependecy exists. This is considered an anti-pattern.
+    There are better way to deal with this problem. Example dependency injection. We confrom to OCP
+    principle. By injecting the dependency we keep our code modular. If we locate or create our collaborator
+    then we introduce tight coupling between the modules.
  
- 4) `HTTPClient` does not need to be a class. It just a contract defining which external functionality the `RemoteFeedLoader` needs so protoocl is more suitable way to define it. The benefit of creating it as a protocol is that we don't need to create a new type. We can use easily create an extension on `URLSession`, Alamofire`. By creating a clean separation with protocol, we made the `RemoteFeedLoader` more flexible, open for extension and more testable.
+ 4) `HTTPClient` does not need to be a class. It just a contract defining which external functionality the
+    `RemoteFeedLoader` needs so protocpl is more suitable way to define it. The benefit of creating it as a protocol
+    is that we don't need to create a new type. We can use easily create an extension on `URLSession`, Alamofire`.
+    By creating a clean separation with protocol, we made the `RemoteFeedLoader` more flexible, open for extension and more testable.
  
  5) Refactoring backed up test is a very very powerful tool. By having the test you reduce the risk a fear of changing.
  */
@@ -65,7 +73,8 @@ protocol HTTPClient {
     func get(from url: URL)
 }
 
-/*Spy captures value. `HTTPClientSpy` is just an implementation of `HTTPClient` rather than a subtype of `HTTPClient` Setup is also simpler in this case. We don't need to inject a shared instance and clients
+/*Spy captures value. `HTTPClientSpy` is just an implementation of `HTTPClient` rather than a subtype of `HTTPClient`
+ Setup is also simpler in this case. We don't need to inject a shared instance and clients
  do not need to locate and it can just whatever is given to it.
  */
 
