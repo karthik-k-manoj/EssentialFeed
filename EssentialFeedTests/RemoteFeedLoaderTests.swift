@@ -35,7 +35,7 @@ protocol HTTPClient {
     func get(from url: URL)
 }
 
-// Spy captures value.
+// Spy captures value. `HTTPClientSpy` is just an implementation of `HTTPClient` rather than a subtype of `HTTPClient`
 class HTTPClientSpy: HTTPClient {
     var requestedURL: URL?
     
