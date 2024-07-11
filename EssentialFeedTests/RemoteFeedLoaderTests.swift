@@ -28,19 +28,19 @@ class RemoteFeedLoader {
  is not really what we need. We have made `shared` as global mutable state just to
  enable our test logic. Nothing wrong with subclass but there is better approach
  such as composition. To use composition we inject this type into `RemoteFeedLoader`
+ 
+ This is an abstract class but in Swift we have protocol to define a interface like this
 */
-class HTTPClient {
-    var requestedURL: URL?
-    
-    func get(from url: URL) {
-        
-    }
+protocol HTTPClient {
+    func get(from url: URL)
 }
 
 // Spy captures value.
 class HTTPClientSpy: HTTPClient {
+    var requestedURL: URL?
+    
     // This is test logic
-    override func get(from url: URL) {
+    func get(from url: URL) {
         requestedURL = url
     }
 }
