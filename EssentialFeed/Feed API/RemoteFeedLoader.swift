@@ -30,7 +30,7 @@ public final class RemoteFeedLoader {
      the `load` interface
      */
     
-    public func load(completion: @escaping (Error) -> Void = { _ in }) {
+    public func load(completion: @escaping (Error) -> Void) {
         /* Here we have two responsibilities. One to locate the shared instance
          and another to invoke this method. Using shared instance which exact
          instance I am talking but it doesn't need to know. If we inject our client
