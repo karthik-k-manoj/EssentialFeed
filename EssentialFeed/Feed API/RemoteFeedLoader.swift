@@ -7,8 +7,13 @@
 
 import Foundation
 
+public enum HTTPClientResult {
+    case success(HTTPURLResponse)
+    case failure(Error)
+}
+
 public protocol HTTPClient {
-    func get(from url: URL, completion: @escaping (Error?, HTTPURLResponse?) -> Void)
+    func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void)
 }
 
 public final class RemoteFeedLoader {
@@ -42,11 +47,12 @@ public final class RemoteFeedLoader {
          dev, stage, uat. `RemoteFeedLoader` does not need to provenace of this data. It could
          given to it. So we can inject it.
          */
-        client.get(from: url) { error, response in
-            if response != nil {
-                completion(.invalidData)
-            } else {
+        client.get(from: url) { resultType in
+            switch resultType {
+            case .failure(let error):
                 completion(.connectivity)
+            case .success(let response):
+                completion(.invalidData)
             }
         }
     }
