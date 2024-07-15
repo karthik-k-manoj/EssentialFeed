@@ -80,6 +80,8 @@ final class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
     
+    // This is a domain specific error connectivity due to
+    // client error (cannot connect to network)
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
         
@@ -94,6 +96,8 @@ final class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(capturedError, [.connectivity])
     }
     
+    // This is a domain specific error invalid data due to
+    // non 200 http response
     func test_load_deliversErrorOnNon200HTTPResponse() {
         let (sut, client) = makeSUT()
         
