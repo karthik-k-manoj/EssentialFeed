@@ -80,7 +80,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
     
-    func test_load_deliversOnClientError() {
+    func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
         
         var capturedError = [RemoteFeedLoader.Error]()
