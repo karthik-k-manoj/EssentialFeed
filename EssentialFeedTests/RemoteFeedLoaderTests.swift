@@ -46,16 +46,20 @@ import EssentialFeed
 /*Spy captures value. `HTTPClientSpy` is just an implementation of `HTTPClient` rather than a subtype of `HTTPClient`
  Setup is also simpler in this case. We don't need to inject a shared instance and clients
  do not need to locate and it can just whatever is given to it.
+ 
+ Shijula :
  */
 
 final class RemoteFeedLoaderTests: XCTestCase {
     
+    // Test what happens when we don't call a method
     func test_init_doesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
         
         XCTAssertTrue(client.requestedURLs.isEmpty)
     }
     
+    // Test what happens when we call the method once
     func test_load_requestsDataFromURL() {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url: url)
@@ -65,6 +69,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestedURLs, [url])
     }
     
+    // Test what happens when we call the method twice
     func test_loadTwice_requestsDataFromURLTwice() {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url: url)
