@@ -8,12 +8,16 @@
 import Foundation
 
 public protocol HTTPClient {
-    func get(from url: URL)
+    func get(from url: URL, completion: @escaping (Error) -> Void)
 }
 
 public final class RemoteFeedLoader {
     private let url: URL
     private let client: HTTPClient
+    
+    public enum Error: Swift.Error {
+        case connectivity
+    }
     
     public init(url: URL, client: HTTPClient) {
         self.url = url
@@ -26,7 +30,7 @@ public final class RemoteFeedLoader {
      the `load` interface
      */
     
-    public func load() {
+    public func load(completion: @escaping (Error) -> Void = { _ in }) {
         /* Here we have two responsibilities. One to locate the shared instance
          and another to invoke this method. Using shared instance which exact
          instance I am talking but it doesn't need to know. If we inject our client
@@ -37,6 +41,8 @@ public final class RemoteFeedLoader {
          dev, stage, uat. `RemoteFeedLoader` does not need to provenace of this data. It could
          given to it. So we can inject it.
          */
-        client.get(from: url)
+        client.get(from: url) { error in
+            completion(.connectivity)
+        }
     }
 }
