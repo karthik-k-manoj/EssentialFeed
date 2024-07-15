@@ -6,7 +6,7 @@
 //
 
 import XCTest
-
+import EssentialFeed
 /*
  Lessons learned
  1) We don't need to conform the `FeedLoader` protocol at the start itself. We can test drive the implementation
@@ -34,36 +34,6 @@ import XCTest
  5) Refactoring backed up test is a very very powerful tool. By having the test you reduce the risk a fear of changing.
  */
 
-class RemoteFeedLoader {
-    let url: URL
-    let client: HTTPClient
-    
-    init(url: URL, client: HTTPClient) {
-        self.url = url
-        self.client = client
-    }
-    
-    /* Do you think for the same instance the client of `RemoteFeedLoader` would request different URLs
-      Looking at `FeedLoader` method `load(completion:)` This means we could load it from URL, load it
-     from cache. URL is a detail of the implementation of the RemoteFeedLoader`. It should not be part of
-     the `load` interface
-     */
-    
-    func load() {
-        /* Here we have two responsibilities. One to locate the shared instance
-         and another to invoke this method. Using shared instance which exact
-         instance I am talking but it doesn't need to know. If we inject our client
-         we have more control over code.
-        */
-        /*
-         We don't know what the URL it could be. We could have different enviornments such as
-         dev, stage, uat. `RemoteFeedLoader` does not need to provenace of this data. It could
-         given to it. So we can inject it.
-         */
-        client.get(from: url)
-    }
-}
-
 /*But here we open the possibility for other classes to hear from HTTPClient which
  is not really what we need. We have made `shared` as global mutable state just to
  enable our test logic. Nothing wrong with subclass but there is better approach
@@ -71,9 +41,7 @@ class RemoteFeedLoader {
  
  This is an abstract class but in Swift we have protocol to define a interface like this
 */
-protocol HTTPClient {
-    func get(from url: URL)
-}
+
 
 /*Spy captures value. `HTTPClientSpy` is just an implementation of `HTTPClient` rather than a subtype of `HTTPClient`
  Setup is also simpler in this case. We don't need to inject a shared instance and clients
