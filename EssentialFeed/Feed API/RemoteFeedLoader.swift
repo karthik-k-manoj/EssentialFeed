@@ -7,6 +7,13 @@
 
 import Foundation
 
+public struct FeedItem: Equatable {
+    let id: UUID
+    let description: String?
+    let location: String?
+    let imageURl: URL
+}
+
 public enum HTTPClientResult {
     case success(Data, HTTPURLResponse)
     case failure(Error)
@@ -25,6 +32,11 @@ public final class RemoteFeedLoader {
         case invalidData
     }
     
+    public enum Result: Equatable {
+        case success([FeedItem])
+        case failure(Error)
+    }
+    
     public init(url: URL, client: HTTPClient) {
         self.url = url
         self.client = client
@@ -36,7 +48,7 @@ public final class RemoteFeedLoader {
      the `load` interface
      */
     
-    public func load(completion: @escaping (Error) -> Void) {
+    public func load(completion: @escaping (Result) -> Void) {
         /* Here we have two responsibilities. One to locate the shared instance
          and another to invoke this method. Using shared instance which exact
          instance I am talking but it doesn't need to know. If we inject our client
@@ -50,9 +62,9 @@ public final class RemoteFeedLoader {
         client.get(from: url) { resultType in
             switch resultType {
             case .failure:
-                completion(.connectivity)
+                completion(.failure(.connectivity))
             case .success:
-                completion(.invalidData)
+                completion(.failure(.invalidData))
             }
         }
     }
