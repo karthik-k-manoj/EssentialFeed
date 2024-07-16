@@ -8,10 +8,26 @@
 import Foundation
 
 public struct FeedItem: Equatable {
-    let id: UUID
-    let description: String?
-    let location: String?
-    let imageURl: URL
+    public let id: UUID
+    public let description: String?
+    public let location: String?
+    public let imageURL: URL
+    
+    public init(id: UUID, description: String?, location: String?, imageURL: URL) {
+        self.id = id
+        self.description = description
+        self.location = location
+        self.imageURL = imageURL
+    }
+}
+
+extension FeedItem: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case description
+        case location
+        case imageURL = "image"
+    }
 }
 
 public enum HTTPClientResult {
@@ -64,12 +80,16 @@ public final class RemoteFeedLoader {
             case .failure:
                 completion(.failure(.connectivity))
             case let .success(data, _):
-                if let _ = try? JSONSerialization.jsonObject(with: data) {
-                    completion(.success([]))
+                if let root = try? JSONDecoder().decode(Root.self, from: data) {
+                    completion(.success(root.items))
                 } else {
                     completion(.failure(.invalidData))
                 }
             }
         }
     }
+}
+
+private struct Root: Decodable {
+    let items: [FeedItem]
 }
