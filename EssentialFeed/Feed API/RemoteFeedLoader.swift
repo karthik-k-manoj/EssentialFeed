@@ -21,6 +21,8 @@ public final class RemoteFeedLoader {
     private let url: URL
     private let client: HTTPClient
     
+    // private let decoder: DecoderProtocol
+    
     public enum Error: Swift.Error {
         case connectivity
         case invalidData
@@ -70,6 +72,8 @@ public final class RemoteFeedLoader {
     }
 }
 
+// Just a namspace for static methods. It does two kind of mapping. One is JSON data to `Root`
+// `RemoteFeedItem` to `FeedItem`
 private class FeedItemsMapper {
     struct Root: Decodable {
         let items: [Item]
