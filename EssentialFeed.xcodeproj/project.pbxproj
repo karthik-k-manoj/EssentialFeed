@@ -102,9 +102,17 @@
 		DAA6FD082C3E85FC009B35D4 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				DA9B2ED02C3F9438003BDF58 /* RemoteFeedLoaderTests.swift */,
+				DABF90142C50CF41008DD2CD /* Feed API */,
 			);
 			path = EssentialFeedTests;
+			sourceTree = "<group>";
+		};
+		DABF90142C50CF41008DD2CD /* Feed API */ = {
+			isa = PBXGroup;
+			children = (
+				DA9B2ED02C3F9438003BDF58 /* RemoteFeedLoaderTests.swift */,
+			);
+			path = "Feed API";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
