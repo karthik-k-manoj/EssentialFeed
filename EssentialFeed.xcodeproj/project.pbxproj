@@ -12,6 +12,7 @@
 		DA9B2ED12C3F9438003BDF58 /* RemoteFeedLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9B2ED02C3F9438003BDF58 /* RemoteFeedLoaderTests.swift */; };
 		DAA6FD052C3E85FC009B35D4 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAA6FCFC2C3E85FC009B35D4 /* EssentialFeed.framework */; };
 		DABF90112C50AE4C008DD2CD /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABF90102C50AE4C008DD2CD /* HTTPClient.swift */; };
+		DABF90132C50AE7D008DD2CD /* FeedItemsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABF90122C50AE7D008DD2CD /* FeedItemsMapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +32,7 @@
 		DAA6FCFC2C3E85FC009B35D4 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAA6FD042C3E85FC009B35D4 /* EssentialFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DABF90102C50AE4C008DD2CD /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		DABF90122C50AE7D008DD2CD /* FeedItemsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemsMapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				DA49589B2C451BE3002229C2 /* RemoteFeedLoader.swift */,
+				DABF90122C50AE7D008DD2CD /* FeedItemsMapper.swift */,
 				DABF90102C50AE4C008DD2CD /* HTTPClient.swift */,
 			);
 			path = "Feed API";
@@ -216,6 +219,7 @@
 				DA0A21AC2C48DFCA00423F65 /* FeedItem.swift in Sources */,
 				DA49589C2C451BE3002229C2 /* RemoteFeedLoader.swift in Sources */,
 				DABF90112C50AE4C008DD2CD /* HTTPClient.swift in Sources */,
+				DABF90132C50AE7D008DD2CD /* FeedItemsMapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
