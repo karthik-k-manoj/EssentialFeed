@@ -46,6 +46,13 @@ public final class RemoteFeedLoader {
          dev, stage, uat. `RemoteFeedLoader` does not need to provenace of this data. It could
          given to it. So we can inject it.
          */
+        
+        /*
+         We may have retain cycle here depending on how the client is created.
+         `RemoteFeedLoader` own `HTTPClient`.
+         `HTTPClient` has an escaping closure so it might be stored or called later (depending on how it is implemented)
+    
+         */
         client.get(from: url) { resultType in
             switch resultType {
             case .failure:
