@@ -156,6 +156,37 @@ final class RemoteFeedLoaderTests: XCTestCase {
         }
     }
     
+    /*
+     In most cases we do not want the object that made the method call
+     with a completion closure to be called when the object is deallocated
+     that's one of the reason we need we use `guard self != nil else { return }`
+     
+     We left a documentation that this is for some reason. Soft documenting. We are checking. We are checking the behaviour
+     
+     We also do the inverse. When the object is deallocated then this happens.
+     This is problem with asycnhronous code.
+     */
+    func test_load_doesNotDeliverResultAfterSUTHasBeenDeallocated() {
+        // Given
+        let url = URL(string: "http://any-url.com")!
+        let client = HTTPClientSpy()
+        var sut: RemoteFeedLoader?
+        sut = RemoteFeedLoader(url: url, client: client)
+        
+        // When
+        var caputedResult = [RemoteFeedLoader.Result]()
+        sut?.load(completion: {
+            caputedResult.append($0)
+        })
+        
+        sut = nil
+        
+        client.complete(withStatusCode: 200)
+        
+        // Then
+        XCTAssertEqual(caputedResult, [])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(

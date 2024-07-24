@@ -53,7 +53,18 @@ public final class RemoteFeedLoader {
          `HTTPClient` has an escaping closure so it might be stored or called later (depending on how it is implemented)
     
          */
-        client.get(from: url) { resultType in
+        /*
+         here even though closure is not holding a strong reference. We are
+         making it hold weak reference so that we check for nil. If it is not nil
+         then we proceed.
+         */
+        
+        /*
+         we are conditioned to think about the classes we are building and not the collaborator. It could be a singleton whose lifetime we are not sure of
+         */
+        client.get(from: url) { [weak self] resultType in
+            guard self != nil else { return }
+            
             switch resultType {
             case .failure:
                 completion(.failure(.connectivity))
@@ -62,5 +73,4 @@ public final class RemoteFeedLoader {
             }
         }
     }
-
 }
