@@ -13,16 +13,18 @@ public final class RemoteFeedLoader {
     private let client: HTTPClient
     
     // private let decoder: DecoderProtocol
+    // this is domain specific Error type is an lower level implementation detail
+    // of the `Feed API` module. Thus we don't want to expose it in the higher level
+    // Feed feature module
     public enum Error: Swift.Error {
         case connectivity
         case invalidData
     }
     
-    public enum Result: Equatable {
-        case success([FeedItem])
-        case failure(Error)
-    }
-    
+    // It's an abstraction. `LoadFeedResult` is part of feed feature module but
+    // with type inference we were able to modify production code and not break the test
+    public typealias Result = LoadFeedResult<Error>
+
     public init(url: URL, client: HTTPClient) {
         self.url = url
         self.client = client

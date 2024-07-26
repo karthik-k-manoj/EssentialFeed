@@ -23,7 +23,7 @@ internal final class FeedItemsMapper {
         let description: String?
         let location: String?
         let image: URL
-        
+         
         var item: FeedItem {
             FeedItem(id: id, description: description, location: location, imageURL: image)
         }
