@@ -24,7 +24,7 @@ public enum LoadFeedResult {
  
 // feature module doesn't know about low level detail
 // domain specific feature may be later 
-protocol FeedLoader {
+public protocol FeedLoader {
     func load(completion: @escaping (LoadFeedResult) -> Void)
 }
 
