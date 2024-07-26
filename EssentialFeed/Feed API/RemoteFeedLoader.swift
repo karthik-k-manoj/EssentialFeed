@@ -23,7 +23,7 @@ public final class RemoteFeedLoader: FeedLoader {
     
     // It's an abstraction. `LoadFeedResult` is part of feed feature module but
     // with type inference we were able to modify production code and not break the test
-    public typealias Result = LoadFeedResult<Error>
+    public typealias Result = LoadFeedResult
 
     public init(url: URL, client: HTTPClient) {
         self.url = url
@@ -68,7 +68,7 @@ public final class RemoteFeedLoader: FeedLoader {
             
             switch resultType {
             case .failure:
-                completion(.failure(.connectivity))
+                completion(.failure(Error.connectivity))
             case let .success(data, response):
                 completion(FeedItemsMapper.map(data, from: response))
             }

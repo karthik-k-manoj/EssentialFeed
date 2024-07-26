@@ -17,7 +17,7 @@ import Foundation
  
  */
 
-public enum LoadFeedResult<Error: Swift.Error> {
+public enum LoadFeedResult {
     case success([FeedItem])
     case failure(Error)
 }
@@ -25,7 +25,6 @@ public enum LoadFeedResult<Error: Swift.Error> {
 // feature module doesn't know about low level detail
 // domain specific feature may be later 
 protocol FeedLoader {
-    associatedtype Error: Swift.Error
-    
-    func load(completion: @escaping (LoadFeedResult<Error>) -> Void)
+    func load(completion: @escaping (LoadFeedResult) -> Void)
 }
+
