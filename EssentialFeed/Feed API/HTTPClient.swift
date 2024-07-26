@@ -8,6 +8,7 @@
 import Foundation
 
 public enum HTTPClientResult {
+    // success from the backend. It could be a response with 201, 201 (created), 202(accepted), 301 (not modified), 400, 500
     case success(Data, HTTPURLResponse)
     case failure(Error)
 }

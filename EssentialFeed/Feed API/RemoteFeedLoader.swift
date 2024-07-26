@@ -13,7 +13,6 @@ public final class RemoteFeedLoader {
     private let client: HTTPClient
     
     // private let decoder: DecoderProtocol
-    
     public enum Error: Swift.Error {
         case connectivity
         case invalidData
