@@ -173,18 +173,18 @@ final class RemoteFeedLoaderTests: XCTestCase {
         var sut: RemoteFeedLoader?
         sut = RemoteFeedLoader(url: url, client: client)
         
+        var isCompletionCalled = false
         // When
-        var caputedResult = [RemoteFeedLoader.Result]()
-        sut?.load(completion: {
-            caputedResult.append($0)
-        })
+        sut?.load { _ in
+            isCompletionCalled = true
+        }
         
         sut = nil
         
         client.complete(withStatusCode: 200)
         
         // Then
-        XCTAssertEqual(caputedResult, [])
+        XCTAssertEqual(isCompletionCalled, false)
     }
     
     // MARK: - Helpers
@@ -225,15 +225,29 @@ final class RemoteFeedLoaderTests: XCTestCase {
         return try! JSONSerialization.data(withJSONObject: json)
     }
     
-    private func expect(_ sut: RemoteFeedLoader, toCompleteWithResult result: RemoteFeedLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
-        var capturedResults = [RemoteFeedLoader.Result]()
-        sut.load {
-            capturedResults.append($0)
+    private func expect(_ sut: RemoteFeedLoader, toCompleteWithResult expectedResult: RemoteFeedLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        
+        let exp = expectation(description: "Wait for load completion")
+        
+        // we are unwrapping it to get into the details due to which we have a
+        // more test code but we simpify production code because it was a good trade off
+        // we are also checking that completion closure was called only once and also checking the values inside. But later if you have the requirement code in the production to handle generics then you can do it else no. Passing test and no warning so commit even though we have to remove generics and type constraints
+        sut.load { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedItems), .success(expectedItems)):
+                XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
+            case let (.failure(receivedError), .failure(expectedError)):
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+            default:
+                XCTFail("Expected result \(expectedResult) git \(receivedResult) instead", file: file, line: line)
+            }
+            
+            exp.fulfill()
         }
         
         action()
         
-        XCTAssertEqual(capturedResults, [result], file: file, line: line)
+        wait(for: [exp], timeout: 1.0)
     }
     
     private class HTTPClientSpy: HTTPClient {
@@ -266,3 +280,12 @@ final class RemoteFeedLoaderTests: XCTestCase {
         }
     }
 }
+
+/*
+ follow the same principle as TDD. make it work, make it right, make it fast`. We made it work. We were able to conform but we can improve the implementation.
+ 
+ we need to have another goal now to get rid of `Equatable`
+ 
+ We will not compare the `Result` value type as a whole, instead unwrap the inner value
+ and compare the result
+ */
