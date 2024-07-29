@@ -21,7 +21,23 @@ public enum LoadFeedResult {
     case success([FeedItem])
     case failure(Error)
 }
+
+/*
+Older Swift versions can't resolve the Swift.Error protocol for a generic type directly (the generic constraint requires a type that conforms to Swift.Error but Swift.Error doesn't conform to Swift.Error
+because protocols don't conform to themselves). You'd get an error such as "Type 'Swift.Error' does not conform to protocol 'Swift.Error'" -
+that's why we'd need the associatedtype.
+
+If you're using the latest Swift versions, that won't be necessary because they added a special case for Swift.Error to conform to itself: https://github.com/apple/swift/pull/20629
+
+public enum LoadFeedResult<Error: Swift.Error> {
+    case success([FeedItem])
+    case failure(Error)
+}
+
+extension LoadFeedResult where Error: Equatable {}
  
+ */
+
 // feature module doesn't know about low level detail
 // domain specific feature may be later 
 public protocol FeedLoader {

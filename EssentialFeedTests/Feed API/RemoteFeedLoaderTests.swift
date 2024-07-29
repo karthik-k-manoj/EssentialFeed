@@ -241,7 +241,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
                  Sometimes we need to make tough decision to protect our abstraction from implementation details
                  In this case it is still not clear to us if a domain specific error is necessary in the high level Feed feature module, so we prefer to use `Swift.Error` protocol for now.
                  */
-            case let (.failure(receivedError as RemoteFeedLoader.Error), .failure(expectedError as RemoteFeedLoader.Error)):
+            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
                  XCTAssertEqual(receivedError, expectedError, file: file, line: line)
             default:
                 XCTFail("Expected result \(expectedResult) git \(receivedResult) instead", file: file, line: line)
