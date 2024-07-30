@@ -19,23 +19,13 @@ class URLSessionHTTPClient {
 }
 
 final class URLSessionHTTPClientTests: XCTestCase {
-    func test_getFromURL_createsDataTaskWithURL() {
-        let url = URL(string: "http://any-url.com")!
-        let session = URLSessionSpy()
-        let sut  = URLSessionHTTPClient  (session: session)
-        
-        sut.get(from: url)
-        
-        XCTAssertEqual(session.receivedURLs, [url])
-    }
-    
     func test_getFromURL_resumesDataTaskWithURL() {
         let url = URL(string: "http://any-url.com")!
         let session = URLSessionSpy()
         let task = URLSessionDataTaskSpy()
         session.stub(url: url, task: task)
         
-        let sut  = URLSessionHTTPClient  (session: session)
+        let sut = URLSessionHTTPClient(session: session)
         
         sut.get(from: url)
         
@@ -52,7 +42,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
         
         override func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
-            receivedURLs.append(url)
             return stubs[url] ?? FakeURLSessionDataTask()
         }
     }
@@ -60,7 +49,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
     // subclassing. often dangerous, we don't own their class. If we start mocking class we don't
     // we are making good assumptions. Working solutions so we commit
     // problem with those tests mocking class is test coupled with private implementation detail
-    // everytime we want to refactor the code then test break. tests are checking the exact impl. But we need to check the behaviour of the production code. Since test broke because we didn't call resume. 
+    // everytime we want to refactor the code then test break. tests are checking the exact impl. But we need to check the behaviour of the production code. Since test broke because we didn't call resume.
     private class FakeURLSessionDataTask: URLSessionDataTask {
         override func resume() { }
     }
