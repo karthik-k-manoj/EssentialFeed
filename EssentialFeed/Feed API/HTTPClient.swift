@@ -16,3 +16,8 @@ public enum HTTPClientResult {
 public protocol HTTPClient {
     func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void)
 }
+
+/*
+ end - end to test: flaky request can fail, no internet when running test
+ is a valid solutions. 
+ */
