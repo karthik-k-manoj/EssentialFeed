@@ -17,7 +17,7 @@ import EssentialFeed
 // to  ` @escaping (HTTPClientResult) -> Void`
 // This is tested so that we are gauranteed that we are actually using the framework correctly
 // this adapter during test uses mock or test double (such as URLProtocolStub)
-class URLSessionHTTPClient {
+class URLSessionHTTPClient: HTTPClient {
     private let session: URLSession
     
     init(session: URLSession = .shared) {
@@ -111,7 +111,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     // Later we can make this return type to be `HTTPClient` so we can protect from test from impl details later
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> URLSessionHTTPClient {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> HTTPClient {
         let sut = URLSessionHTTPClient()
       //  trackForMemoryLeaks(sut, file: file, line: line)
         return sut
