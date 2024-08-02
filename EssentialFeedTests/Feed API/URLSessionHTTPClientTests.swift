@@ -93,7 +93,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     private class URLProtocolStub : URLProtocol {
-        var receivedURLs = [URL]()
         private static var stub: Stub?
         private static var requestObserver: ((URLRequest) -> Void)?
         
