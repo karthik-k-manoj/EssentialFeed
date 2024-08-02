@@ -27,9 +27,11 @@ class URLSessionHTTPClient {
     struct UnexpectedValueRepresentaion: Error {}
      
     func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
-        session.dataTask(with: url) { _, _, error in
+        session.dataTask(with: url) { data, response, error in
             if let error {
                 completion(.failure(error))
+            } else if let data = data, data.count > 0, let response = response as? HTTPURLResponse {
+                completion(.success(data, response))
             } else {
                 completion(.failure(UnexpectedValueRepresentaion()))
             }
@@ -63,6 +65,30 @@ final class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: nonHTTPURLResponse(), error: anyNSError()))
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyHTTPResponse(), error: anyNSError()))
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: nonHTTPURLResponse(), error: nil))
+    }
+    
+    func test_getFromURL_succeedsOnHTTPURLResponseWithData() {
+        let data = anyData()
+        let response = anyHTTPResponse()
+        URLProtocolStub.stub(data: data, response: response, error: nil)
+        
+        let exp = expectation(description: "Wait for completion")
+        
+        makeSUT().get(from: anyURL()) { result in
+            switch result {
+            case .success(let receivedData, let receivedResponse):
+                XCTAssertEqual(receivedData, data)
+                XCTAssertEqual(receivedResponse.url, response.url)
+                XCTAssertEqual(receivedResponse.statusCode, response.statusCode)
+                
+            default:
+                XCTFail("Expeced success, get \(result) instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
 //    func test_getFromURL_performsGETRequestWithURL() {
@@ -106,7 +132,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
             case .failure(let error):
                 receivedError = error
             default:
-                XCTFail("Expected failure, get \(result) instead", file: file, line: line)
+                XCTFail("Expected failure, got \(result) instead", file: file, line: line)
             }
             
             exp.fulfill()
