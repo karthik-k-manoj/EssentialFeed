@@ -13,6 +13,10 @@ import EssentialFeed
  for sole purpose of purpose for testing. Valid solutions. A little improvmenet. improved our test but production code got complex
 */
 
+// This is infact an adapter which adapts URLSession.dataTask completion handler
+// to  ` @escaping (HTTPClientResult) -> Void`
+// This is tested so that we are gauranteed that we are actually using the framework correctly
+// this adapter during test uses mock or test double (such as URLProtocolStub)
 class URLSessionHTTPClient {
     private let session: URLSession
     
