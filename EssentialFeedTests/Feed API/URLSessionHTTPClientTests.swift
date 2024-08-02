@@ -167,8 +167,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
         return receivedValues
     }
     
-    
-    
     private func anyURL() -> URL {
         URL(string: "http://any-url.com")!
     }
