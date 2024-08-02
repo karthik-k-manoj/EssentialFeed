@@ -77,14 +77,22 @@ final class URLSessionHTTPClientTests: XCTestCase {
             }
             
             exp.fulfill()
-        }
+        } 
         
         wait(for: [exp], timeout: 1.0)
     }
     
     // Later we can make this return type to be `HTTPClient` so we can protect from test from impl details later
-    private func makeSUT() -> URLSessionHTTPClient {
-        URLSessionHTTPClient()
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> URLSessionHTTPClient {
+        let sut = URLSessionHTTPClient()
+      //  trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
+    }
+    
+    private func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
+        addTeardownBlock { [weak instance] in
+            XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak", file: file, line: line)
+        }
     }
     
     private class URLProtocolStub : URLProtocol {
@@ -111,9 +119,9 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
         
         static func stopInterceptingRequest() {
+            URLProtocol.unregisterClass(URLProtocolStub.self)
             stub = nil
             requestObserver = nil
-            URLProtocol.unregisterClass(URLProtocolStub.self)
         }
         
         // we can handle the request and our responbility to complete with success or failure
