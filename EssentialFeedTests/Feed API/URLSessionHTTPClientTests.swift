@@ -8,6 +8,8 @@
 import XCTest
 import EssentialFeed
 
+// We want all test method to run in isolation and as a group. if one test fails then
+// all reason should be in each test method.
 
 final class URLSessionHTTPClientTests: XCTestCase {
     override func setUp() {
