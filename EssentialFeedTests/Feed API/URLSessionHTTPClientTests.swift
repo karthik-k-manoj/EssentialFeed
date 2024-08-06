@@ -27,6 +27,14 @@ import EssentialFeed
 
 // if code coverage slows down the process then we will disable it
 
+// add some end to end test in integration checking if agreed to contract
+
+// a dev /test backend env allows us to run end-end-tests without the fear of unwanted side-effects in production
+
+// In our exp a we cannot have test server. If not then we can
+// create own.
+
+// alternatively if there's any backend env, we can create test account with pre-populdated data. Make sure to create one account per app. So other app changes are not affecting our test result
 
 
 final class URLSessionHTTPClientTests: XCTestCase {
