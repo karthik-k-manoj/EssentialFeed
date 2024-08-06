@@ -11,6 +11,24 @@ import EssentialFeed
 // We want all test method to run in isolation and as a group. if one test fails then
 // all reason should be in each test method.
 
+// pass in integration and not pass in isolation
+
+// above can checked by randomizing to guarantee there is no order dependency
+
+// if fewer tests no need for parallel testing
+
+// code coverage means lines of code and not checking all behaviour
+
+// code coverage is side effect of TDD but that's not the goal
+
+// but to have confidence that we test the behaviour, and that
+
+// we are free to change the code, being agile, prevent bugs
+
+// if code coverage slows down the process then we will disable it
+
+
+
 final class URLSessionHTTPClientTests: XCTestCase {
     override func setUp() {
         super.setUp()
