@@ -111,3 +111,5 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
 }
 
 // getting the right feedback is valuable. Where and why it failed. We shouldn't be debugging.
+// we do run them often. It would be better if we could run this before merging to main
+// through continous integration pipeline and enforcing integrity of our code base
