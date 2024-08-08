@@ -239,7 +239,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
         
         // will get crash as this is abstract classs
-        override func stopLoading() {}
+        override func stopLoading() { }
     }
     
     // subclassing. often dangerous, we don't own their class. If we start mocking class we don't
