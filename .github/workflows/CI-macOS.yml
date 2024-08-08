@@ -11,7 +11,7 @@ jobs:
     # This workflow contains a single job called "build-and-test"
     build-and-test:
     # Type of runner that the job will run on
-    runs-on: macos-14
+    runs-on: macos-13
     
     timeout-minutes: 5
     
@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name Select Xcode
-      run: sudo xcode-select -switch /Application/Xcode_15.4.app
+      run: sudo xcode-select -switch /Application/Xcode_14.3.1.app
     
     - name: Xcode version
       run /usr/bin/xcodebuild -version
