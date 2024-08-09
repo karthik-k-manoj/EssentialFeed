@@ -83,20 +83,26 @@ final class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertEqual(receivedValues?.response.statusCode , response.statusCode)
     }
 
-//    func test_getFromURL_performsGETRequestWithURL() {
-//        let url = anyURL()
-//        let exp = expectation(description: "Wait for request")
-//
-//        URLProtocolStub.observeRequests { request in
-//            XCTAssertEqual(request.url, url)
-//            XCTAssertEqual(request.httpMethod, "GET")
-//            exp.fulfill()
-//        }
-//
-//        makeSUT().get(from: anyURL()) { _ in }
-//
-//        wait(for: [exp], timeout: 1.0)
-//    }
+    func test_getFromURL_performsGETRequestWithURL() {
+        let url = anyURL()
+        var receivedRequests = [URLRequest]()
+        
+        let exp = expectation(description: "Wait for request completion")
+
+        URLProtocolStub.observeRequests { request in
+            receivedRequests.append(request)
+        }
+
+        makeSUT().get(from: anyURL()) { _ in
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertEqual(receivedRequests.count, 1)
+        XCTAssertEqual(receivedRequests.first?.url, url)
+        XCTAssertEqual(receivedRequests.first?.httpMethod, "GET")
+    }
     
     func test_getFromURL_failsOnRequestError() {
         let requestError = anyNSError()
@@ -214,7 +220,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         // we can handle the request and our responbility to complete with success or failure
         override class func canInit(with request: URLRequest) -> Bool {
-            requestObserver?(request)
             return true
         }
         
@@ -223,6 +228,12 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
         
         override func startLoading() {
+            if let requestObserver = URLProtocolStub.requestObserver {
+                requestObserver(request)
+                client?.urlProtocolDidFinishLoading(self)
+                return
+            }
+            
             if let error = URLProtocolStub.stub?.error {
                 client?.urlProtocol(self, didFailWithError: error)
             }
