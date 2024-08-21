@@ -47,7 +47,7 @@ import EssentialFeed
  Setup is also simpler in this case. We don't need to inject a shared instance and clients
  do not need to locate and it can just whatever is given to it.
  
- Shijula :
+ a use case can be considered alogrithm or receipe. A use case can be implemented as a single object or composition of objects collaborating.
  */
 
 final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
