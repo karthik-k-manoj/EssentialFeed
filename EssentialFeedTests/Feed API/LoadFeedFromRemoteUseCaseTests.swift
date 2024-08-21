@@ -1,5 +1,5 @@
 //
-//  RemoteFeedLoaderTests.swift
+//  LoadFeedFromRemoteUseCaseTests.swift
 //  EssentialFeedTests
 //
 //  Created by Karthik K Manoj on 11/07/24.
@@ -50,7 +50,7 @@ import EssentialFeed
  Shijula :
  */
 
-final class RemoteFeedLoaderTests: XCTestCase {
+final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
     
     // Test what happens when we don't call a method
     func test_init_doesNotRequestDataFromURL() {
