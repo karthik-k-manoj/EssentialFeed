@@ -39,8 +39,12 @@ class FeedStore {
 
 final class CacheFeedUseCasesTests: XCTestCase {
     // without invoking any behavior we want just by creating sut we to assert that we do not delete cache
-    func test() {
+    func test_init_doesNotDeleteCacheUponCreation() {
         let store = FeedStore()
+        /*
+         To decouple app from framework details we don't let framework dictate the use case interface the use case needs
+         we do by test driving the interfaces the Use case needs for it's collaborator, rather than defining the interface upfront to facilitate a specific framework impl
+         */
         _ = LocalFeedLoader(store: store)
         
         XCTAssertEqual(store.deletedCachedFeedCallCount, 0)
