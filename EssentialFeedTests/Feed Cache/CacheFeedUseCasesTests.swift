@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import EssentialFeed
 
 // Developing softwate is a social activity and often we must gather domain info from outside tech team
 // technical or business decision we must gather adequate info about the req before we start to code
@@ -23,8 +24,14 @@ import XCTest
 
 
 final class LocalFeedLoader {
+    let store: FeedStore
+    
     init(store: FeedStore) {
-        
+        self.store = store
+    }
+    
+    func save(_ items: [FeedItem]) {
+        store.deleteCachedFeed()
     }
 }
 
@@ -35,6 +42,10 @@ final class LocalFeedLoader {
  */
 class FeedStore {
     var deletedCachedFeedCallCount = 0
+    
+    func deleteCachedFeed() {
+        deletedCachedFeedCallCount += 1
+    }
 }
 
 final class CacheFeedUseCasesTests: XCTestCase {
@@ -48,5 +59,25 @@ final class CacheFeedUseCasesTests: XCTestCase {
         _ = LocalFeedLoader(store: store)
         
         XCTAssertEqual(store.deletedCachedFeedCallCount, 0)
+    }
+    
+    func test_save_requestCacheDeletion() {
+        let store = FeedStore()
+        let sut = LocalFeedLoader(store: store)
+        let items = [uniqueItem(), uniqueItem()]
+        
+        sut.save(items)
+        
+        XCTAssertEqual(store.deletedCachedFeedCallCount, 1)
+    }
+    
+    // MARK: - Helpers
+    
+    private func uniqueItem() -> FeedItem {
+        FeedItem(id: UUID(), description: "any", location: "any", imageURL: anyURL())
+    }
+    
+    private func anyURL() -> URL {
+        URL(string: "http://any-url.com")!
     }
 }
