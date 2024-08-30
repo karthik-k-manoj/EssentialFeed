@@ -26,9 +26,9 @@ import EssentialFeed
 
 final class LocalFeedLoader {
     let store: FeedStore
-    let currentDate: Date
+    let currentDate: () -> Date
     
-    init(store: FeedStore, currentDate: Date) {
+    init(store: FeedStore, currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
     }
@@ -36,7 +36,7 @@ final class LocalFeedLoader {
     func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void)  {
         store.deleteCachedFeed { [unowned self] error in
             if error == nil {
-                self.store.insert(items, timestamp: currentDate, completion: completion)
+                self.store.insert(items, timestamp: currentDate(), completion: completion)
             } else {
                 completion(error)
             }
@@ -134,7 +134,7 @@ final class CacheFeedUseCasesTests: XCTestCase {
     
     private func makeSUT(currentDate: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
         let store = FeedStoreSpy()
-        let sut = LocalFeedLoader(store: store, currentDate: currentDate)
+        let sut = LocalFeedLoader(store: store, currentDate: { currentDate })
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(store, file: file, line: line)
         return (sut, store)
