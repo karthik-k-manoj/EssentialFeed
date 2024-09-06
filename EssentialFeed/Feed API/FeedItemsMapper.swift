@@ -7,13 +7,6 @@
 
 import Foundation
 
-internal struct RemoteFeedItem: Decodable {
-    internal let id: UUID
-    internal let description: String?
-    internal let location: String?
-    internal let image: URL
-}
-
 // Just a namspace for static methods. It does two kind of mapping. One is JSON data to `Root`
 // `RemoteFeedItem` to `FeedItem`
 internal final class FeedItemsMapper {
