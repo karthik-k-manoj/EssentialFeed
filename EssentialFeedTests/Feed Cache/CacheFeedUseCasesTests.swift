@@ -23,36 +23,6 @@ import EssentialFeed
 // requirement change aim for flexible sol. be ready so you don't have to get ready
 
 
-
-final class LocalFeedLoader {
-    let store: FeedStore
-    let currentDate: () -> Date
-    
-    init(store: FeedStore, currentDate: @escaping () -> Date) {
-        self.store = store
-        self.currentDate = currentDate
-    }
-    
-    func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void)  {
-        store.deleteCachedFeed { [weak self] error in
-            guard let self = self else { return }
-            
-            if let cacheDeletionError = error {
-                completion(cacheDeletionError)
-            } else {
-                self.cache(items, with: completion)
-            }
-        }
-    }
-    
-    private func cache(_ items : [FeedItem], with completion: @escaping (Error?) -> Void) {
-        store.insert(items, timestamp: currentDate()) { [weak self] error in
-            guard self != nil else { return }
-            completion(error)
-        }
-    }
-}
-
 /*
  FeedStore is a helper class representing the framework side to help us
  define the abstract interface the use case needs for it's collaborator, making sure
@@ -61,14 +31,6 @@ final class LocalFeedLoader {
 /*
  this class adds production code test code. this is a different appraoch than making a spy class implement a protocol
  */
-
-protocol FeedStore {
-    typealias DeletionCompletion = (Error?) -> Void
-    typealias InsertionCompletion = (Error?) -> Void
-    
-    func deleteCachedFeed(completion: @escaping DeletionCompletion)
-    func insert(_ items: [FeedItem], timestamp: Date, completion: @escaping InsertionCompletion)
-}
 
 final class CacheFeedUseCasesTests: XCTestCase {
     // without invoking any behavior we want just by creating sut we to assert that we do not delete cache
