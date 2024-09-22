@@ -129,6 +129,7 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
     }
 }
 
+// test specific tiny DSL to decouple test from implementation detail (calendar logic)
 private extension Date {
     func adding(days: Int) -> Date {
         Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
