@@ -34,6 +34,16 @@ public final class LocalFeedLoader {
         }
     }
     
+    public func validateCache() {
+        store.retrieve { _ in
+            
+        }
+        
+        store.deleteCachedFeed { _  in
+            
+        }
+    }
+    
     // query should not have side effects
     public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
@@ -41,7 +51,6 @@ public final class LocalFeedLoader {
             
             switch result {
             case .failure(let error):
-                store.deleteCachedFeed { _ in }
                 completion(.failure(error))
             case let .found(feed, timestamp) where self.validate(timestamp):
                 completion(.success(feed.toModel()))
