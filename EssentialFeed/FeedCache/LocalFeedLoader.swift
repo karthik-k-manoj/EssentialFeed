@@ -65,7 +65,7 @@ extension LocalFeedLoader {
     }
       
 }
-extension LocalFeedLoader {
+extension LocalFeedLoader: FeedLoader {
     // query should not have side effects
     public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
