@@ -7,6 +7,8 @@
 
 import Foundation
 
+// use cases encap application specific logic
+// rules and polices can be represetned as business model and are app agnositc and framework and side-effects (across application)
 public final class LocalFeedLoader {
     let store: FeedStore
     let currentDate: () -> Date
