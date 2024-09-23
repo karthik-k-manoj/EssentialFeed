@@ -23,8 +23,12 @@ func uniqueImage() -> FeedImage {
 
 // test specific tiny DSL to decouple test from implementation detail (calendar logic)
 extension Date {
+    private var feedCacheMaxAgeInDays: Int {
+        7
+    }
+    
     func minusFeedCacheMaxAge() -> Date {
-         adding(days: -7)
+         adding(days: -feedCacheMaxAgeInDays)
     }
     
     func adding(days: Int) -> Date {
