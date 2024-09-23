@@ -7,12 +7,20 @@
 
 import Foundation
 
+// entity are business model with identity
+// value objects are business models without identity like a policy
+// in this case policy has no identity which mean it can be static. just encapsultes just the rules
+
+// Rules.
+
 private final class FeedCachePolicy {
-    private let calendar = Calendar(identifier: .gregorian)
+    private init() {}
     
-    private var maxCacheAgeInDays: Int {  7 }
+    private static let calendar = Calendar(identifier: .gregorian)
     
-    func validate(_ timestamp: Date, against date: Date) -> Bool {
+    private static var maxCacheAgeInDays: Int {  7 }
+    
+    static func validate(_ timestamp: Date, against date: Date) -> Bool {
         guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else { return false }
         return date < maxCacheAge
     }
@@ -22,7 +30,6 @@ private final class FeedCachePolicy {
 // rules and polices can be represetned as business model and are app agnositc and framework and side-effects (across application)
 public final class LocalFeedLoader {
     private let store: FeedStore
-    private let cachePolicy = FeedCachePolicy()
     private let currentDate: () -> Date
   
     public init(store: FeedStore, currentDate: @escaping () -> Date) {
@@ -62,7 +69,7 @@ extension LocalFeedLoader {
             switch result {
             case .failure:
                 self.store.deleteCachedFeed { _  in }
-            case let .found(_, timestamp) where !self.cachePolicy.validate(timestamp, against: self.currentDate()):
+            case let .found(_, timestamp) where !FeedCachePolicy.validate(timestamp, against: self.currentDate()):
                 self.store.deleteCachedFeed { _ in }
             case .empty, .found: break
             }
@@ -81,7 +88,7 @@ extension LocalFeedLoader: FeedLoader {
             switch result {
             case .failure(let error):
                 completion(.failure(error))
-            case let .found(feed, timestamp) where self.cachePolicy.validate(timestamp,  against: self.currentDate()):
+            case let .found(feed, timestamp) where FeedCachePolicy.validate(timestamp,  against: self.currentDate()):
                 completion(.success(feed.toModel()))
             case .found, .empty:
                 completion(.success([]))
