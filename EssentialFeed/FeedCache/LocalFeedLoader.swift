@@ -7,39 +7,86 @@
 
 import Foundation
 
+// use cases encap application specific logic
+// rules and polices can be represetned as business model and are app agnositc and framework and side-effects (across application)
 public final class LocalFeedLoader {
-    let store: FeedStore
-    let currentDate: () -> Date
-    
-    public typealias SaveResult = Error?
-    
+    private let store: FeedStore
+    private let currentDate: () -> Date
+  
     public init(store: FeedStore, currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
     }
+}
+
+extension LocalFeedLoader {
+    public typealias SaveResult = Error?
     
-    public func save(_ items: [FeedItem], completion: @escaping (SaveResult) -> Void)  {
+    public func save(_ feed: [FeedImage], completion: @escaping (SaveResult) -> Void)  {
         store.deleteCachedFeed { [weak self] error in
             guard let self = self else { return }
             
             if let cacheDeletionError = error {
                 completion(cacheDeletionError)
             } else {
-                self.cache(items, with: completion)
+                self.cache(feed, with: completion)
             }
         }
     }
     
-    private func cache(_ items : [FeedItem], with completion: @escaping (SaveResult) -> Void) {
-        store.insert(items.toLocal(), timestamp: currentDate()) { [weak self] error in
+    private func cache(_ feed : [FeedImage], with completion: @escaping (SaveResult) -> Void) {
+        store.insert(feed.toLocal(), timestamp: currentDate()) { [weak self] error in
             guard self != nil else { return }
             completion(error)
         }
     }
 }
 
-private extension Array where Element == FeedItem {
-    func toLocal() -> [LocalFeedItem] {
-        map {  LocalFeedItem(id: $0.id, description: $0.description, location: $0.description, imageURL: $0.imageURL) }
+extension LocalFeedLoader {
+    public func validateCache() {
+        store.retrieve { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .failure:
+                self.store.deleteCachedFeed { _  in }
+            case let .found(_, timestamp) where !FeedCachePolicy.validate(timestamp, against: self.currentDate()):
+                self.store.deleteCachedFeed { _ in }
+            case .empty, .found: break
+            }
+        }
+    }
+      
+}
+extension LocalFeedLoader: FeedLoader {
+    public typealias LoadResult = LoadFeedResult
+    
+    // query should not have side effects
+    public func load(completion: @escaping (LoadResult) -> Void) {
+        store.retrieve { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+            case let .found(feed, timestamp) where FeedCachePolicy.validate(timestamp,  against: self.currentDate()):
+                completion(.success(feed.toModel()))
+            case .found, .empty:
+                completion(.success([]))
+            }
+        }
+    }
+}
+
+
+private extension Array where Element == FeedImage {
+    func toLocal() -> [LocalFeedImage] {
+        map {  LocalFeedImage(id: $0.id, description: $0.description, location: $0.description, url: $0.imageURL) }
+    }
+}
+
+private extension Array where Element == LocalFeedImage {
+    func toModel() -> [FeedImage] {
+        map {  FeedImage(id: $0.id, description: $0.description, location: $0.description, imageURL: $0.url) }
     }
 }
