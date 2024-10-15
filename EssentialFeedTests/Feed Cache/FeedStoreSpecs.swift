@@ -1,6 +1,6 @@
 //
-//  FeedStoreSpecsswift.swift
-//  EssentialFeedTests
+//  FeedStoreSpecs.swift
+//  EssentialFeedTests 
 //
 //  Created by Karthik K Manoj on 15/10/24.
 //
