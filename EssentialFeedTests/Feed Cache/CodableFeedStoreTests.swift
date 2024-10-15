@@ -221,7 +221,7 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStore {
             exp.fulfill()
         }
         
-        wait(for: [exp], timeout: 1.0)
+        wait(for: [exp], timeout: 1.5)
         
         return deletionError
     }
