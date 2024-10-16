@@ -1,6 +1,6 @@
 //
 //  FeedStoreSpecs.swift
-//  EssentialFeedTests 
+//  EssentialFeedTests
 //
 //  Created by Karthik K Manoj on 15/10/24.
 //
@@ -13,8 +13,6 @@ protocol FeedStoreSpecs {
     func test_retreive_hasNoSideEffectsOnEmptyCache()
     
     func test_retreive_afterInsertingToEmptyCache_deliversInsertedValues()
-    
-    func test_retreive_deliversFoundValuesOnNonEmptyCache()
     
     func test_insert_overridesPreviouslyInsertedCacheValues()
     
