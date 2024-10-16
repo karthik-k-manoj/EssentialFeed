@@ -7,6 +7,9 @@
 
 import Foundation
 
+// Interface Segration Principle (ISP)
+// no client should be foreced to depend on method it does not use
+// An in memory impl of FeedStore protocol would never fail to retrive, save or delete. Thus it does not need to implement the error specs
 protocol FeedStoreSpecs {
     func test_retreive_deliversEmptyOnEmptyCache()
     

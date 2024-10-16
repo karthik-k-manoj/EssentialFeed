@@ -8,6 +8,9 @@
 import EssentialFeed
 import XCTest
 
+// This is possible due to LSP:
+// Objects in a program should be replaceable with instances of thier subtypes without altering the correctness
+// of the program 
 extension FeedStoreSpecs where Self: XCTestCase {
     func assertThatRetreiveDeliversEmptyOnEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
         expect(sut, toRetrieve: .empty, file: file, line: line)
