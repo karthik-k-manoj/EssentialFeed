@@ -26,42 +26,17 @@ extension FeedStoreSpecs where Self: XCTestCase {
         expect(sut, toRetrieve: .found(feed: feed, timestamp: timestamp), file: file, line: line)
     }
     
-    func assertThatRetrieveHasNoSideEffectsOnFailure(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toRetrieveTwice: .failure(anyNSError()), file: file, line: line)
-    }
-    
-    func assertThatRetrieveDeliversFailureOnRetrievalError(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toRetrieve: .failure(anyNSError()), file: file, line: line)
-    }
-    
     func assertThatInsertOverridePreviouslyInsertedCacheValues(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
         insert((uniqueImageFeed().local, Date()), to: sut, file: file, line: line)
         
         let latestFeedItem = uniqueImageFeed().local
         let latestTimestamp = Date()
-        let latestInsertionError = insert((latestFeedItem, latestTimestamp), to: sut, file: file, line: line)
+        insert((latestFeedItem, latestTimestamp), to: sut, file: file, line: line)
 
         expect(sut, toRetrieve: .found(feed: latestFeedItem, timestamp: latestTimestamp), file: file, line: line)
         }
     
-    func assertThatInsertDeliversErrorOnInsertionFailure(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        let feed = uniqueImageFeed().local
-        let timestamp = Date()
-        
-        let insertionError = insert((feed, timestamp), to: sut)
-        
-        XCTAssertNotNil(insertionError, "Expected cache insertion to fail with an error.", file: file, line: line)
-        expect(sut, toRetrieve: .empty, file: file, line: line)
-    }
-    
-    func assertThatInsertionHasNoSideEffectOnInsertionFailure(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        let feed = uniqueImageFeed().local
-        let timestamp = Date()
-        
-        insert((feed, timestamp), to: sut)
-        expect(sut, toRetrieve: .empty, file: file, line: line)
-    }
-    
+   
     func assertThatDeleteHasNoSideEffectOnEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
         
         delete(from: sut)
@@ -72,18 +47,6 @@ extension FeedStoreSpecs where Self: XCTestCase {
     func assertThatDeleteDeletesPreviouslyInsertedCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
         insert((uniqueImageFeed().local, Date()), to: sut)
         
-        delete(from: sut)
-        
-        expect(sut, toRetrieve: .empty)
-    }
-    
-    func assertThatDeleteDeliversErrorOnDeletionError(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        let deletionError = delete(from: sut)
-        
-        XCTAssertNotNil(deletionError, "Expected cache deletion to fail")
-    }
-    
-    func assertThatDeleteHasNoSideEffectOnDeletionError(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
         delete(from: sut)
         
         expect(sut, toRetrieve: .empty)
